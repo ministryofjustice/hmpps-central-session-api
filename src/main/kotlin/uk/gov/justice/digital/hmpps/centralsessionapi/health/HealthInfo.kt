@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppscentralsessionapi.health
+package uk.gov.justice.digital.hmpps.centralsessionapi.health
 
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator

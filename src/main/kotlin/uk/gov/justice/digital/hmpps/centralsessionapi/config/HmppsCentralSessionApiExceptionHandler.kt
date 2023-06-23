@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppscentralsessionapi.config
+package uk.gov.justice.digital.hmpps.centralsessionapi.config
 
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
