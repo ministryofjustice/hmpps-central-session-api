@@ -12,7 +12,7 @@
     </layout>
   </appender>
 
-  <logger name="uk.gov.justice.digital.hmpps.hmppscentralsessionapi.HmppsCentralSessionApiKt" additivity="false"
+  <logger name="uk.gov.justice.digital.hmpps.centralsessionapi.HmppsCentralSessionApiKt" additivity="false"
           level="DEBUG">
     <appender-ref ref="consoleAppender"/>
   </logger>
