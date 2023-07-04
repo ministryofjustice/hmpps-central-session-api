@@ -6,7 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
-import org.springframework.data.redis.connection.*
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
+import org.springframework.data.redis.connection.RedisPassword
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.ReactiveRedisOperations
@@ -15,10 +17,15 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext.newSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
-import java.util.*
 import kotlin.collections.MutableMap
 import kotlin.collections.mutableMapOf
 import kotlin.collections.set
@@ -48,8 +55,9 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
     }
 
     throw ResponseStatusException(
-      HttpStatus.NOT_FOUND, "entity not found",
-    );
+      HttpStatus.NOT_FOUND,
+      "entity not found",
+    )
   }
 
   @PostMapping("/{id}/{appName}")
@@ -119,7 +127,7 @@ class RedisProperties(
   var port: Int = 6379,
   var password: String = "",
   var tlsEnabled: Boolean = false,
-) {}
+)
 
 @Configuration
 class SessionOps(val redisProperties: RedisProperties) {
