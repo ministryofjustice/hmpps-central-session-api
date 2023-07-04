@@ -21,12 +21,6 @@ jobs:
         -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2
         -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
         -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
-    parameters:
-      resource_class:
-        default: medium
-        type: string
-      tag:
-        type: string
     resource_class: medium
     working_directory: ~/app
     steps:
