@@ -13,9 +13,16 @@ parameters:
 
 jobs:
   validate:
-    executor:
-      name: hmpps/java
-      tag: "19.0"
+    docker:
+      - image: cimg/openjdk:19.0
+      - image: cimg/redis:6.0
+    environment:
+      _JAVA_OPTIONS: >-
+        -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2
+        -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
+        -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
+    resource_class: medium
+    working_directory: ~/app
     steps:
       - checkout
       - restore_cache:

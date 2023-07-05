@@ -49,3 +49,9 @@ management:
     info:
       cache:
         time-to-live: 2000ms
+
+redis:
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+  password: ${REDIS_AUTH_TOKEN}
+  tls-enabled: ${REDIS_TLS_ENABLED:false}
