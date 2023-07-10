@@ -33,8 +33,6 @@ import kotlin.collections.set
 @RestController
 @RequestMapping("/sessions")
 class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession>) {
-  val logger = LoggerFactory.getLogger(TestResource::class.java)
-
   @GetMapping("/{id}/{appName}")
   suspend fun read(
     @PathVariable id: String,
@@ -43,7 +41,6 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
     val storedSession = sessionOps.opsForValue().get(id).block()
     if (storedSession != null) {
       return Session(
-        storedSession.cookie,
         SessionPassport(
           SessionPassportUser(
             storedSession.tokens[appName],
@@ -66,10 +63,7 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
     @PathVariable appName: String,
     @RequestBody session: Session,
   ): Mono<Boolean> {
-    logger.info(session.cookie?.expires ?: "MISSING EXPIRY")
-    logger.info(session.passport?.user?.token ?: "MISSING TOKEN")
     val storedSession: StoredSession = sessionOps.opsForValue().get(id).block() ?: StoredSession(
-      session.cookie,
       mutableMapOf(),
       session.passport?.user?.username,
       session.passport?.user?.authSource,
@@ -89,17 +83,7 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
   ) = sessionOps.delete(id)
 }
 
-class SessionCookie(
-  @JsonProperty("originalMaxAge") val originalMaxAge: Number,
-  @JsonProperty("expires") val expires: String,
-  @JsonProperty("secure") val secure: Boolean,
-  @JsonProperty("httpOnly") val httpOnly: Boolean,
-  @JsonProperty("path") val path: String,
-  @JsonProperty("sameSite") val sameSite: String,
-)
-
 class StoredSession(
-  @JsonProperty("cookie") val cookie: SessionCookie?,
   @JsonProperty("tokens") val tokens: MutableMap<String, String>,
   @JsonProperty("username") val username: String?,
   @JsonProperty("authSource") val authSource: String?,
@@ -116,7 +100,6 @@ class SessionPassport(
 )
 
 class Session(
-  val cookie: SessionCookie?,
   val passport: SessionPassport?,
 )
 
