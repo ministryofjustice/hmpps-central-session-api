@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.centralsessionapi.resource
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
