@@ -40,19 +40,19 @@ import kotlin.collections.set
 class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession>, val requestCounter: RequestCounter) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  @GetMapping("/{id}/{appName}")
+  @GetMapping("/id/appName")
   suspend fun read(
     @PathVariable id: String,
     @PathVariable appName: String,
   ): Mono<Session> {
     requestCounter.addCount()
-    logger.info("[get-${id}-${appName}] Request count: ${requestCounter.count}")
-    return sessionOps.opsForValue().get("${id}-${appName}").map {
+    logger.info("[get-$id-$appName] Request count: ${requestCounter.count}")
+    return sessionOps.opsForValue().get("$id-$appName").map {
       Session(SessionPassport(SessionPassportUser(it.tokens[appName], it.username, it.authSource)))
     }.switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)))
   }
 
-  @PostMapping("/{id}/{appName}")
+  @PostMapping("/id/appName")
   suspend fun setSession(
     @PathVariable id: String,
     @PathVariable appName: String,
@@ -61,7 +61,7 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
     requestCounter.addCount()
     logger.info("[set] Request count: ${requestCounter.count}")
 
-    return sessionOps.opsForValue().get("${id}-${appName}").defaultIfEmpty(
+    return sessionOps.opsForValue().get("$id-$appName").defaultIfEmpty(
       StoredSession(
         mutableMapOf(),
         session.passport?.user?.username,
@@ -73,18 +73,18 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
       }
       it
     }.flatMap {
-      sessionOps.opsForValue().set("${id}-${appName}", it)
+      sessionOps.opsForValue().set("$id-$appName", it)
     }
   }
 
-  @DeleteMapping("/{id}/{appName}")
+  @DeleteMapping("/id/appName")
   suspend fun delete(
     @PathVariable id: String,
     @PathVariable appName: String,
   ) {
     requestCounter.addCount()
     logger.info("[del] Request count: ${requestCounter.count}")
-    sessionOps.delete("${id}-${appName}")
+    sessionOps.delete("$id-$appName")
   }
 
   @ExceptionHandler(ResponseStatusException::class)
@@ -126,7 +126,7 @@ class RedisProperties(
 )
 
 class RequestCounter {
-  public var count = 0;
+  public var count = 0
 
   public fun addCount() {
     count += 1
