@@ -40,7 +40,7 @@ import kotlin.collections.set
 class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession>, val requestCounter: RequestCounter) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
-  @GetMapping("/id/appName")
+  @GetMapping("/{id}/{appName}")
   suspend fun read(
     @PathVariable id: String,
     @PathVariable appName: String,
@@ -52,7 +52,7 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
     }.switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)))
   }
 
-  @PostMapping("/id/appName")
+  @PostMapping("/{id}/{appName}")
   suspend fun setSession(
     @PathVariable id: String,
     @PathVariable appName: String,
@@ -77,7 +77,7 @@ class TestResource(val sessionOps: ReactiveRedisOperations<String, StoredSession
     }
   }
 
-  @DeleteMapping("/id/appName")
+  @DeleteMapping("/{id}/{appName}")
   suspend fun delete(
     @PathVariable id: String,
     @PathVariable appName: String,
